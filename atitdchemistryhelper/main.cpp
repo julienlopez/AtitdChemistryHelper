@@ -45,7 +45,6 @@ std::string fetchEssencesDataSSL()
     boost::asio::connect(stream.next_layer(), results.begin(), results.end());
     stream.handshake(ssl::stream_base::client);
 
-    // Set up an HTTP GET request message
     http::request<http::string_body> req{http::verb::get, target, version};
     req.set(http::field::host, host);
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
@@ -56,20 +55,7 @@ std::string fetchEssencesDataSSL()
     http::response<http::dynamic_body> res;
     http::read(stream, buffer, res);
 
-    // std::cout << res << std::endl;
-    // std::string str;
-
-    const auto str = boost::beast::buffers_to_string(res.body().data());
-    /*
-    // Gracefully close the stream
-    boost::system::error_code ec;
-    stream.shutdown(ec);
-    if(ec == boost::asio::error::eof)
-        ec.assign(0, ec.category());
-    if(ec) throw boost::system::system_error{ec};
-    */
-
-    return str;
+    return boost::beast::buffers_to_string(res.body().data());
 }
 
 struct Essence
@@ -139,24 +125,22 @@ std::vector<std::string> splitHtmlTableLines(std::string html)
     return LibChemistryHelper::Utils::Strings::split(html, "</tr><tr>");
 }
 
-void parse(std::string html)
+auto parse(std::string html)
 {
     html.erase(std::remove(begin(html), end(html), '\n'), end(html));
     html = isolateEssencesTable(std::move(html));
-    // std::cout << html << std::endl;
     auto lines = splitHtmlTableLines(std::move(html));
-    lines.erase(begin(lines));
-    const auto essences
-        = LibChemistryHelper::Utils::Algorithms::transformVector<std::string, Essence>(lines, &parseEssenceLine);
-    for(const auto& e : essences)
-        std::cout << e.material << " : " << (int)e.temperature << " | " << (int)e.ar << std::endl;
+    lines.erase(begin(lines)); // removing header
+    return LibChemistryHelper::Utils::Algorithms::transformVector<std::string, Essence>(lines, &parseEssenceLine);
 }
 
 int main(int argc, char* argv[])
 {
     try
     {
-        parse(fetchEssencesDataSSL());
+        const auto essences = parse(fetchEssencesDataSSL());
+        for(const auto& e : essences)
+            std::cout << e.material << " : " << (int)e.temperature << " | " << (int)e.ar << std::endl;
         return EXIT_SUCCESS;
     }
     catch(std::exception const& e)
