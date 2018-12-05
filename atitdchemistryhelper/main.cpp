@@ -1,8 +1,10 @@
-#include "libchemistryhelper/strings.hpp"
+#include "libchemistryhelper/utils/algorithms.hpp"
+#include "libchemistryhelper/utils/strings.hpp"
 
 #include <iostream>
 
 #include <gsl/gsl_assert>
+#include <gsl/gsl_util>
 
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -70,6 +72,49 @@ std::string fetchEssencesDataSSL()
     return str;
 }
 
+struct Essence
+{
+    std::string material;
+    uint8_t temperature;
+    std::string recipe;
+    int8_t ar;
+    int8_t as;
+    int8_t bi;
+    int8_t sa;
+    int8_t so;
+    int8_t sp;
+    int8_t sw;
+    int8_t to;
+};
+
+int8_t stoi8(const std::string& str)
+{
+    if(str.empty()) return 0;
+    return gsl::narrow<int8_t>(stoi(str));
+}
+
+uint8_t stoui8(const std::string& str)
+{
+    if(str.empty()) return 0;
+    return gsl::narrow<int8_t>(stoul(str));
+}
+
+Essence parseEssenceLine(std::string str)
+{
+    Expects(LibChemistryHelper::Utils::Strings::beginsWith(str, "<td>"));
+    Expects(LibChemistryHelper::Utils::Strings::endsWith(str, "</td>"));
+    str = str.substr(4, str.size() - 4 - 5);
+    auto res = LibChemistryHelper::Utils::Strings::split(str, "</td><td");
+    for(auto& r : res)
+    {
+        const auto pos = r.find('>');
+        if(pos != std::string::npos) r = r.substr(pos + 1);
+    }
+    assert(res.size() == 11);
+    return {res[0],        stoui8(res[1]), res[2],        stoi8(res[3]), stoi8(res[4]), stoi8(res[5]),
+            stoi8(res[6]), stoi8(res[7]),  stoi8(res[8]), stoi8(res[9]), stoi8(res[10])};
+}
+
 std::string isolateEssencesTable(std::string html)
 {
     auto begin_pos = html.find("id=\"Essences\"");
@@ -86,11 +131,25 @@ std::string isolateEssencesTable(std::string html)
     return html;
 }
 
+std::vector<std::string> splitHtmlTableLines(std::string html)
+{
+    Expects(LibChemistryHelper::Utils::Strings::beginsWith(html, "<tr>"));
+    Expects(LibChemistryHelper::Utils::Strings::endsWith(html, "</tr>"));
+    html = html.substr(4, html.size() - 4 - 5);
+    return LibChemistryHelper::Utils::Strings::split(html, "</tr><tr>");
+}
+
 void parse(std::string html)
 {
+    html.erase(std::remove(begin(html), end(html), '\n'), end(html));
     html = isolateEssencesTable(std::move(html));
-    html = html.substr(4, html.size() - 4 - 5);
-    std::cout << html << std::endl;
+    // std::cout << html << std::endl;
+    auto lines = splitHtmlTableLines(std::move(html));
+    lines.erase(begin(lines));
+    const auto essences
+        = LibChemistryHelper::Utils::Algorithms::transformVector<std::string, Essence>(lines, &parseEssenceLine);
+    for(const auto& e : essences)
+        std::cout << e.material << " : " << (int)e.temperature << " | " << (int)e.ar << std::endl;
 }
 
 int main(int argc, char* argv[])
