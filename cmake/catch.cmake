@@ -1,0 +1,5 @@
+set(ACH_CATCH_ROOT_DIR "" CACHE PATH "Use specific catch folder?")
+if(NOT "${ACH_CATCH_ROOT_DIR}" STREQUAL "")
+	include_directories("${ACH_CATCH_ROOT_DIR}/include")
+	link_directories("${ACH_CATCH_ROOT_DIR}/lib")
+endif()
