@@ -15,8 +15,9 @@ namespace Utils
         template <class INPUT, class RESULT>
         auto transformVector(const std::vector<INPUT> inputs, std::function<RESULT(INPUT)> fct)
         {
-            std::vector<RESULT> res(inputs.size());
-            std::transform(begin(inputs), end(inputs), begin(res), fct);
+            std::vector<RESULT> res;
+            res.reserve(inputs.size());
+            std::transform(begin(inputs), end(inputs), std::back_inserter(res), fct);
             return res;
         }
 

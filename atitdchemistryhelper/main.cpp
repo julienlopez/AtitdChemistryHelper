@@ -1,3 +1,5 @@
+#include "libchemistryhelper/essence.hpp"
+
 #include "libchemistryhelper/utils/algorithms.hpp"
 #include "libchemistryhelper/utils/strings.hpp"
 
@@ -18,9 +20,8 @@
 using tcp = boost::asio::ip::tcp;
 namespace http = boost::beast::http;
 
-namespace net = boost::asio; // from <boost/asio.hpp>
-namespace ssl = net::ssl; // from <boost/asio/ssl.hpp>
-using tcp = net::ip::tcp; // from <boost/asio/ip/tcp.hpp>
+namespace net = boost::asio;
+namespace ssl = net::ssl;
 
 std::string fetchEssencesDataSSL()
 {
@@ -58,21 +59,6 @@ std::string fetchEssencesDataSSL()
     return boost::beast::buffers_to_string(res.body().data());
 }
 
-struct Essence
-{
-    std::string material;
-    uint8_t temperature;
-    std::string recipe;
-    int8_t ar;
-    int8_t as;
-    int8_t bi;
-    int8_t sa;
-    int8_t so;
-    int8_t sp;
-    int8_t sw;
-    int8_t to;
-};
-
 int8_t stoi8(const std::string& str)
 {
     if(str.empty()) return 0;
@@ -85,7 +71,7 @@ uint8_t stoui8(const std::string& str)
     return gsl::narrow<int8_t>(stoul(str));
 }
 
-Essence parseEssenceLine(std::string str)
+LibChemistryHelper::Essence parseEssenceLine(std::string str)
 {
     Expects(LibChemistryHelper::Utils::Strings::beginsWith(str, "<td>"));
     Expects(LibChemistryHelper::Utils::Strings::endsWith(str, "</td>"));
@@ -131,7 +117,8 @@ auto parse(std::string html)
     html = isolateEssencesTable(std::move(html));
     auto lines = splitHtmlTableLines(std::move(html));
     lines.erase(begin(lines)); // removing header
-    return LibChemistryHelper::Utils::Algorithms::transformVector<std::string, Essence>(lines, &parseEssenceLine);
+    return LibChemistryHelper::Utils::Algorithms::transformVector<std::string, LibChemistryHelper::Essence>(
+        lines, &parseEssenceLine);
 }
 
 int main(int argc, char* argv[])
@@ -140,7 +127,8 @@ int main(int argc, char* argv[])
     {
         const auto essences = parse(fetchEssencesDataSSL());
         for(const auto& e : essences)
-            std::cout << e.material << " : " << (int)e.temperature << " | " << (int)e.ar << std::endl;
+            std::cout << e.material << " : " << (int)e.temperature << " | "
+                      << (int)e.properties.at(LibChemistryHelper::Essence::Property::Ar) << std::endl;
         return EXIT_SUCCESS;
     }
     catch(std::exception const& e)
