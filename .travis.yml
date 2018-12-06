@@ -26,11 +26,6 @@ before_install:
   - sudo unlink /usr/bin/g++
   - sudo ln -s /usr/bin/g++-7 /usr/bin/g++
   - g++ -v
-  # - sudo apt-get update -qq
-  # - sudo apt-get install cmake
-  # - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev qt5-default qttools5-dev-tools
-  # - sudo apt-get install libboost-dev
-  # - sudo apt-get update
   - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
   - tar xf lcov_1.11.orig.tar.gz
   - sudo make -C lcov-1.11/ install
@@ -44,7 +39,7 @@ script:
   - mkdir build_gcc
   - cd build_gcc
   - cmake ..
-  - make VERBOSE=1
+  - make VERBOSE=1 unit_tests
   #- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/bin/
   - ls -la
   - ls -la unit_tests
