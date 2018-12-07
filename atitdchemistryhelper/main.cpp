@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
             std::cout << e.material << " : " << (int)e.temperature << " | "
                       << (int)e.properties.at(LibChemistryHelper::Essence::Property::Ar) << std::endl;
         std::cout << essences.size() << std::endl;
-		return EXIT_SUCCESS;
+        return EXIT_SUCCESS;
     }
     catch(std::exception const& e)
     {

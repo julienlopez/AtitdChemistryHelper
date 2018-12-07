@@ -38,9 +38,7 @@ script:
   - cd build_gcc
   - cmake .. -DENABLE_COVERAGE=ON
   - make VERBOSE=1 unit_tests
-  #- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/bin/
-  - ls -la
-  - ls -la unit_tests
+  - lcov --no-external --capture --initial --directory /../libchemistryhelper --directory ../atitdchemistryhelper --output-file ../coverage_base.info
   - unit_tests/unit_tests
   - cd ..
 
@@ -50,7 +48,8 @@ after_success:
   - pwd
   - find . -name *.gcda
   - find . -name *.gcno
-  - lcov --directory libchemistryhelper --directory  atitdchemistryhelper --directory build_gcc --capture --no-external --output-file coverage.info # capture coverage info
+  - lcov --directory libchemistryhelper --directory atitdchemistryhelper --directory build_gcc --capture --no-external --output-file coverage_tests.info
+  - lcov --add-tracefile coverage_base.info --add-tracefile coverage_tests.info --output-file coverage.info
   - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
   - lcov --remove coverage.info '3rd_party/*' --output-file coverage.info # filter out system
   - lcov --list coverage.info #debug info
