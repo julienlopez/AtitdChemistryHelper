@@ -25,13 +25,11 @@ before_install:
   - eval "${MATRIX_EVAL}"
   - sudo unlink /usr/bin/g++
   - sudo ln -s /usr/bin/g++-7 /usr/bin/g++
-  - g++ -v
   - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
   - tar xf lcov_1.11.orig.tar.gz
   - sudo make -C lcov-1.11/ install
   - git clone https://github.com/Microsoft/GSL
   - sudo ln -s /home/travis/build/julienlopez/AtitdChemistryHelper/GSL/include/gsl /usr/include
-  - pwd
   # Codecov
   - sudo pip install codecov
 
@@ -44,6 +42,7 @@ script:
   - ls -la
   - ls -la unit_tests
   - unit_tests/unit_tests
+  - cd ..
 
 after_success:
   # Creating report
