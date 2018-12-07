@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include <boost/optional.hpp>
 
@@ -10,6 +11,8 @@ namespace LibChemistryHelper
 
 struct Essence
 {
+
+    using Container_t = std::vector<Essence>;
 
     enum class Property
     {

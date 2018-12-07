@@ -2,15 +2,13 @@
 
 #include "essence.hpp"
 
-#include <vector>
-
 namespace LibChemistryHelper
 {
 
 class IEssencesDataGatherer
 {
 public:
-    using Container_t = std::vector<Essence>;
+    using Container_t = Essence::Container_t;
 
     virtual ~IEssencesDataGatherer() = default;
 
