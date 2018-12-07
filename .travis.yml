@@ -47,7 +47,7 @@ script:
 after_success:
   # Creating report
   - cd ${TRAVIS_BUILD_DIR}
-  - find -name "*.gcda" .
+  - find . -name "*.gcda"
   - lcov --directory libchemistryhelper --directory  atitdchemistryhelper --directory build_gcc --capture --no-external --output-file coverage.info # capture coverage info
   - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
   - lcov --remove coverage.info '3rd_party/*' --output-file coverage.info # filter out system
