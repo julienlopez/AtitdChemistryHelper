@@ -38,7 +38,7 @@ script:
   - cd build_gcc
   - cmake .. -DENABLE_COVERAGE=ON
   - make VERBOSE=1 unit_tests
-  - lcov --no-external --capture --initial --directory /../libchemistryhelper --directory ../atitdchemistryhelper --output-file ../coverage_base.info
+  - lcov --no-external --capture --initial --directory ../libchemistryhelper --directory ../atitdchemistryhelper --output-file ../coverage_base.info
   - unit_tests/unit_tests
   - cd ..
 
