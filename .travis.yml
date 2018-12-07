@@ -36,7 +36,7 @@ before_install:
 script:
   - mkdir build_gcc
   - cd build_gcc
-  - cmake ..
+  - cmake .. -DENABLE_COVERAGE=ON
   - make VERBOSE=1 unit_tests
   #- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/bin/
   - ls -la
