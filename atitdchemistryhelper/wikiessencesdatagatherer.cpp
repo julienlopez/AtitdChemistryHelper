@@ -60,15 +60,15 @@ std::string fetchEssencesDataSSL()
     return boost::beast::buffers_to_string(res.body().data());
 }
 
-int8_t stoi8(const std::string& str)
+boost::optional<int8_t> stoi8(const std::string& str)
 {
-    if(str.empty()) return 0;
+    if(str.empty()) return boost::none;
     return gsl::narrow<int8_t>(stoi(str));
 }
 
-uint8_t stoui8(const std::string& str)
+boost::optional<uint8_t> stoui8(const std::string& str)
 {
-    if(str.empty()) return 0;
+    if(str.empty()) return boost::none;
     return gsl::narrow<int8_t>(stoul(str));
 }
 
