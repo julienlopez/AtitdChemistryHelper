@@ -59,6 +59,14 @@ namespace Utils
         return std::equal(token.rbegin(), token.rend(), str.rbegin());
     }
 
+    std::string Strings::join(const std::vector<std::string>& values, const std::string& separator)
+    {
+        std::string res;
+        for(const auto& v : values)
+            res += v + separator;
+        return res.substr(0, res.size() - separator.size());
+    }
+
 } // Utils
 
 } // LibChemistryHelper

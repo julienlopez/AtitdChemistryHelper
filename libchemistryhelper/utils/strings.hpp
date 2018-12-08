@@ -22,6 +22,8 @@ namespace Utils
         bool beginsWith(const std::string& str, const std::string& token);
 
         bool endsWith(const std::string& str, const std::string& token);
+
+        std::string join(const std::vector<std::string>& values, const std::string& separator);
     }
 
 } // Utils
