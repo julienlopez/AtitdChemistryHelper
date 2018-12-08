@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
             std::cout << e.material << " : ";
             print<uint8_t, int>(std::cout, e.temperature);
             std::cout << " | ";
-            print<int8_t, int>(std::cout, e.properties.at(LibChemistryHelper::Essence::Property::Ar));
+            print<int8_t, int>(std::cout, e.properties.at(LibChemistryHelper::Property::Ar));
             std::cout << std::endl;
         }
         std::cout << essences.size() << std::endl;

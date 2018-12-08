@@ -13,7 +13,7 @@ class EssenceRecipeFinder
 public:
     struct Requirement
     {
-        Essence::Property prop;
+        Property prop;
     };
     using RequirementContainer_t = std::vector<Requirement>;
     using EssenceContainer_t = Essence::Container_t;

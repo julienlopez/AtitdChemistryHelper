@@ -1,7 +1,8 @@
 #pragma once
 
+#include "property.hpp"
+
 #include <map>
-#include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
@@ -14,18 +15,6 @@ struct Essence
 
     using Container_t = std::vector<Essence>;
 
-    enum class Property
-    {
-        Ar,
-        As,
-        Bi,
-        Sa,
-        So,
-        Sp,
-        Sw,
-        To
-    };
-
     Essence(std::string material_, boost::optional<uint8_t> temperature_, std::string recipe_,
             boost::optional<int8_t> ar, boost::optional<int8_t> as, boost::optional<int8_t> bi,
             boost::optional<int8_t> sa, boost::optional<int8_t> so, boost::optional<int8_t> sp,
@@ -36,9 +25,5 @@ struct Essence
     std::string recipe;
     std::map<Property, boost::optional<int8_t>> properties;
 };
-
-Essence::Property stringToProperty(const std::string& str);
-
-std::string propertyToString(const Essence::Property);
 
 } // LibChemistryHelper
