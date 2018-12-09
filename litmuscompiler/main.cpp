@@ -105,15 +105,40 @@ auto extractUsedEssences(const ConstraintContainer_t& constraints)
     return res;
 }
 
-std::vector<LibChemistryHelper::Essence::Container_t>
-generatePossibilities(const std::set<std::string>& essence_names)
+auto generatePossibilitiesForOneEssence(const std::string& essence_name)
+{
+    LibChemistryHelper::Essence::Container_t res;
+    res.reserve(std::pow(7, 8));
+    for(const auto ar : range<int8_t>(-3, 3))
+        for(const auto as : range<int8_t>(-3, 3))
+            for(const auto bi : range<int8_t>(-3, 3))
+                for(const auto sa : range<int8_t>(-3, 3))
+                    for(const auto so : range<int8_t>(-3, 3))
+                        for(const auto sp : range<int8_t>(-3, 3))
+                            for(const auto sw : range<int8_t>(-3, 3))
+                                for(const auto to : range<int8_t>(-3, 3))
+                                    // TODO load proper essence spirits
+                                    res.push_back(LibChemistryHelper::Essence{essence_name, boost::none, "", ar, as, bi,
+                                                                              sa, so, sp, sw, to});
+    return res;
+}
+
+auto carthesianProduct(const std::vector<LibChemistryHelper::Essence::Container_t>& sets)
 {
     std::vector<LibChemistryHelper::Essence::Container_t> res;
-    for(const auto ar_value : range(-3, 3))
-    // for (const auto ar_value : property_values)
-    {
-    }
+
     return res;
+}
+
+auto
+generatePossibilities(const std::vector<std::string>& essence_names)
+{
+    std::vector<LibChemistryHelper::Essence::Container_t> possibility_per_essence(essence_names.size());
+    for(const auto i : range(essence_names.size()))
+    {
+        possibility_per_essence[i] = generatePossibilitiesForOneEssence(essence_names[i]);
+    }
+    return carthesianProduct(possibility_per_essence);
 }
 
 auto doesPossibilityFitConstraint(const LibChemistryHelper::Essence::Container_t& possiblity)
@@ -150,9 +175,13 @@ int main(int argc, char* argv[])
     {
         const auto constraints = extractConstraints(loadResultsFile(argv[1]));
         std::cout << constraints.size() << " constraints loaded" << std::endl;
-        const auto essences = extractUsedEssences(constraints);
+        auto essences_set = extractUsedEssences(constraints);
+        std::vector<std::string> essences{ begin(essences_set), end(essences_set) };
         std::cout << essences.size() << " essences found" << std::endl;
+        essences.erase(begin(essences) + 10, end(essences));
+        std::cout << "using only " << essences.size() << " essences" << std::endl;
         auto possibilities = generatePossibilities(essences);
+        std::cout << possibilities.size() << "possibilities found" << std::endl;
         possibilities = filterPossibilities(std::move(possibilities), constraints);
         return EXIT_SUCCESS;
     }
