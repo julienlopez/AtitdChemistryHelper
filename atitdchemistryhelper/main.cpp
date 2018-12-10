@@ -19,6 +19,8 @@ template <class T, class CT> std::ostream& print(std::ostream& o, const boost::o
 }
 }
 
+using LibChemistryHelper::Property;
+
 int main(int argc, char* argv[])
 {
     try
@@ -33,10 +35,22 @@ int main(int argc, char* argv[])
             std::cout << e.material << " : ";
             print<uint8_t, int>(std::cout, e.temperature);
             std::cout << " | ";
-            print<int8_t, int>(std::cout, e.properties.at(LibChemistryHelper::Property::Ar));
+            print<int8_t, int>(std::cout, e.properties.at(Property::Ar));
+            std::cout << " | ";
+            print<int8_t, int>(std::cout, e.properties.at(Property::As));
             std::cout << std::endl;
         }
-        std::cout << essences.size() << std::endl;
+        std::cout << std::endl << essences.size() << std::endl;
+        std::cout << "looking for Ar(--) As(++)" << std::endl;
+        LibChemistryHelper::EssenceRecipeFinder finder(essences);
+        const auto recipes = finder.findRecipes({{Property::Ar, [](int value) { return value <= -4; }},
+                                                 {Property::As, [](int value) { return value >= 4; }}});
+        std::cout << recipes.size() << " recipes found:" << std::endl;
+        for(const auto& rec : recipes)
+        {
+            std::cout << "\t " << rec[0].material << " " << rec[1].material << " " << rec[2].material << " "
+                      << rec[3].material << " " << rec[4].material << " " << std::endl;
+        }
         return EXIT_SUCCESS;
     }
     catch(std::exception const& e)

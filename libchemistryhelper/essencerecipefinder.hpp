@@ -13,8 +13,11 @@ class EssenceRecipeFinder
 public:
     struct Requirement
     {
+        using TestCallback_t = std::function<bool(int)>;
         Property prop;
+        TestCallback_t test;
     };
+
     using RequirementContainer_t = std::vector<Requirement>;
     using EssenceContainer_t = Essence::Container_t;
     using Result_t = std::array<Essence, 5>;

@@ -63,13 +63,27 @@ std::string fetchEssencesDataSSL()
 boost::optional<int8_t> stoi8(const std::string& str)
 {
     if(str.empty()) return boost::none;
-    return gsl::narrow<int8_t>(stoi(str));
+    try
+    {
+        return gsl::narrow<int8_t>(stoi(str));
+    }
+    catch(...)
+    {
+        return boost::none;
+    }
 }
 
 boost::optional<uint8_t> stoui8(const std::string& str)
 {
     if(str.empty()) return boost::none;
-    return gsl::narrow<int8_t>(stoul(str));
+    try
+    {
+        return gsl::narrow<int8_t>(stoul(str));
+    }
+    catch(...)
+    {
+        return boost::none;
+    }
 }
 
 LibChemistryHelper::Essence parseEssenceLine(std::string str)
