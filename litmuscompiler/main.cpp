@@ -70,8 +70,8 @@ Constraint parseLitmusResults(std::vector<std::string> essences, std::string lin
 }
 
 /**
-* @pre line starts with an apostrophe (to begin the essence list)
-*/
+ * @pre line starts with an apostrophe (to begin the essence list)
+ */
 Constraint parseContraintLine(boost::string_view line)
 {
     Expects(line.front() == '"');
@@ -130,8 +130,7 @@ auto carthesianProduct(const std::vector<LibChemistryHelper::Essence::Container_
     return res;
 }
 
-auto
-generatePossibilities(const std::vector<std::string>& essence_names)
+auto generatePossibilities(const std::vector<std::string>& essence_names)
 {
     std::vector<LibChemistryHelper::Essence::Container_t> possibility_per_essence(essence_names.size());
     for(const auto i : range(essence_names.size()))
@@ -176,7 +175,7 @@ int main(int argc, char* argv[])
         const auto constraints = extractConstraints(loadResultsFile(argv[1]));
         std::cout << constraints.size() << " constraints loaded" << std::endl;
         auto essences_set = extractUsedEssences(constraints);
-        std::vector<std::string> essences{ begin(essences_set), end(essences_set) };
+        std::vector<std::string> essences{begin(essences_set), end(essences_set)};
         std::cout << essences.size() << " essences found" << std::endl;
         essences.erase(begin(essences) + 10, end(essences));
         std::cout << "using only " << essences.size() << " essences" << std::endl;
