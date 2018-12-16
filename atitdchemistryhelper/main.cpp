@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
         std::cout << std::endl << essences.size() << std::endl;
         std::cout << "looking for Ar(--) As(++)" << std::endl;
         LibChemistryHelper::EssenceRecipeFinder finder(essences);
-        const auto recipes = finder.findRecipes({{Property::Ar, [](int value) { return value <= -4; }},
-                                                 {Property::As, [](int value) { return value >= 4; }}});
+        const auto recipes = finder.findRecipes({LibChemistryHelper::CompoundRequirement::fromString("Ar(--)"),
+                                                 LibChemistryHelper::CompoundRequirement::fromString("As(++)")});
         std::cout << recipes.size() << " recipes found:" << std::endl;
         for(const auto& rec : recipes)
         {

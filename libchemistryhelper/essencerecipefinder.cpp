@@ -51,7 +51,7 @@ namespace
 
     auto fitMix(const Mix& mix)
     {
-        return [&mix](const EssenceRecipeFinder::Requirement& req) -> bool {
+        return [&mix](const CompoundRequirement& req) -> bool {
             const auto res = mix.value(req.prop);
             if(res) return req.test(*res);
             return false;
@@ -70,7 +70,7 @@ EssenceRecipeFinder::EssenceRecipeFinder(EssenceContainer_t essences)
 {
 }
 
-auto EssenceRecipeFinder::findRecipes(const RequirementContainer_t& requirements) const -> ResultContainer_t
+auto EssenceRecipeFinder::findRecipes(const CompoundRequirementContainer_t& requirements) const -> ResultContainer_t
 {
     ResultContainer_t res;
     const auto valid_essences = findValidEssences(requirements);
@@ -92,7 +92,8 @@ auto EssenceRecipeFinder::findRecipes(const RequirementContainer_t& requirements
     return res;
 }
 
-auto EssenceRecipeFinder::findValidEssences(const RequirementContainer_t& requirements) const -> EssenceContainer_t
+auto EssenceRecipeFinder::findValidEssences(const CompoundRequirementContainer_t& requirements) const
+    -> EssenceContainer_t
 {
     EssenceContainer_t valid_essences;
     std::copy_if(begin(m_essences), end(m_essences), std::back_inserter(valid_essences),
