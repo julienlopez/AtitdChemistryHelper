@@ -41,10 +41,15 @@ int main(int argc, char* argv[])
             std::cout << std::endl;
         }
         std::cout << std::endl << essences.size() << std::endl;
-        std::cout << "looking for Ar(--) As(++)" << std::endl;
+        std::vector<std::string> reqs{"Ar(--)", "As(++)"};
+        std::cout << "looking for " << std::endl;
+        std::copy(begin(reqs), end(reqs), std::ostream_iterator<std::string>(std::cout, " "));
+        std::cout << std::endl;
+        std::vector<LibChemistryHelper::CompoundRequirement> requirements;
+        std::transform(begin(reqs), end(reqs), std::back_inserter(requirements),
+                       &LibChemistryHelper::CompoundRequirement::fromString);
         LibChemistryHelper::EssenceRecipeFinder finder(essences);
-        const auto recipes = finder.findRecipes({LibChemistryHelper::CompoundRequirement::fromString("Ar(--)"),
-                                                 LibChemistryHelper::CompoundRequirement::fromString("As(++)")});
+        const auto recipes = finder.findRecipes(requirements);
         std::cout << recipes.size() << " recipes found:" << std::endl;
         for(const auto& rec : recipes)
         {
