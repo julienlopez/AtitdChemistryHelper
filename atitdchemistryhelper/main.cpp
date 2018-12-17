@@ -17,12 +17,34 @@ template <class T, class CT> std::ostream& print(std::ostream& o, const boost::o
         o << "N/A";
     return o;
 }
+
+std::vector<LibChemistryHelper::CompoundRequirement> buildRequirements(const bool do_litmus_template_runs)
+{
+    if(do_litmus_template_runs)
+    {
+        std::cout << "searching for an all-null recipe" << std::endl;
+        const auto lmbd = [](const int i) { return i == 0; };
+        return {{LibChemistryHelper::Property::Ar, lmbd}, {LibChemistryHelper::Property::As, lmbd},
+                {LibChemistryHelper::Property::Bi, lmbd}, {LibChemistryHelper::Property::Sa, lmbd},
+                {LibChemistryHelper::Property::So, lmbd}, {LibChemistryHelper::Property::Sp, lmbd},
+                {LibChemistryHelper::Property::Sw, lmbd}, {LibChemistryHelper::Property::To, lmbd}};
+    }
+    std::vector<std::string> reqs{"Ar(--)", "As(++)"};
+    std::cout << "looking for " << std::endl;
+    std::copy(begin(reqs), end(reqs), std::ostream_iterator<std::string>(std::cout, " "));
+    std::cout << std::endl;
+    std::vector<LibChemistryHelper::CompoundRequirement> requirements;
+    std::transform(begin(reqs), end(reqs), std::back_inserter(requirements),
+                   &LibChemistryHelper::CompoundRequirement::fromString);
+    return requirements;
+}
 }
 
 using LibChemistryHelper::Property;
 
 int main(int argc, char* argv[])
 {
+    const bool do_litmus_template_runs = (argc == 2 && argv[1] == std::string("--template"));
     try
     {
         auto essences = WikiIEssencesDataGatherer().gatherData();
@@ -41,15 +63,8 @@ int main(int argc, char* argv[])
             std::cout << std::endl;
         }
         std::cout << std::endl << essences.size() << std::endl;
-        std::vector<std::string> reqs{"Ar(--)", "As(++)"};
-        std::cout << "looking for " << std::endl;
-        std::copy(begin(reqs), end(reqs), std::ostream_iterator<std::string>(std::cout, " "));
-        std::cout << std::endl;
-        std::vector<LibChemistryHelper::CompoundRequirement> requirements;
-        std::transform(begin(reqs), end(reqs), std::back_inserter(requirements),
-                       &LibChemistryHelper::CompoundRequirement::fromString);
         LibChemistryHelper::EssenceRecipeFinder finder(essences);
-        const auto recipes = finder.findRecipes(requirements);
+        const auto recipes = finder.findRecipes(buildRequirements(do_litmus_template_runs));
         std::cout << recipes.size() << " recipes found:" << std::endl;
         for(const auto& rec : recipes)
         {
