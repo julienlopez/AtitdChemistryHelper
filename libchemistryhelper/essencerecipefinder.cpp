@@ -49,7 +49,7 @@ namespace
         const Essence& m_e5;
     };
 
-    auto fitMix(const Mix& mix)
+    template <class T> auto fitMix(const T& mix)
     {
         return [&mix](const CompoundRequirement& req) -> bool {
             const auto res = mix.value(req.prop);
@@ -63,6 +63,30 @@ namespace
         if(n == 0) return 1;
         return n * factorial(n - 1);
     }
+
+    class Template
+    {
+    public:
+        Template(const Essence& e1, const Essence& e2, const Essence& e3, const Essence& e4)
+            : m_e1(e1)
+            , m_e2(e2)
+            , m_e3(e3)
+            , m_e4(e4)
+        {
+        }
+
+        boost::optional<int8_t> value(const Property& prop) const
+        {
+            return m_e1.properties.at(prop) + m_e2.properties.at(prop) + m_e3.properties.at(prop)
+                   + m_e4.properties.at(prop);
+        }
+
+    private:
+        const Essence& m_e1;
+        const Essence& m_e2;
+        const Essence& m_e3;
+        const Essence& m_e4;
+    };
 }
 
 EssenceRecipeFinder::EssenceRecipeFinder(EssenceContainer_t essences)
@@ -89,6 +113,27 @@ auto EssenceRecipeFinder::findRecipes(const CompoundRequirementContainer_t& requ
                         if(std::all_of(begin(requirements), end(requirements), fitMix(mix)))
                             res.push_back({*it1, *it2, *it3, *it4, *it5});
                     }
+    return res;
+}
+
+auto EssenceRecipeFinder::findTemplates(const CompoundRequirementContainer_t& requirements) const -> TemplateContainer_t
+{
+    TemplateContainer_t res;
+    const auto valid_essences = findValidEssences(requirements);
+    std::cout << valid_essences.size() << " valid essences found:" << std::endl;
+    if(valid_essences.size() > 20)
+        std::cout << "accounting for too many possibilities to count" << std::endl;
+    else
+        std::cout << "accounting for " << factorial(valid_essences.size()) << " possibilities" << std::endl;
+    for(auto it1 = begin(valid_essences); it1 != end(valid_essences); ++it1)
+        for(auto it2 = it1 + 1; it2 != end(valid_essences); ++it2)
+            for(auto it3 = it2 + 1; it3 != end(valid_essences); ++it3)
+                for(auto it4 = it3 + 1; it4 != end(valid_essences); ++it4)
+                {
+                    const Template mix(*it1, *it2, *it3, *it4);
+                    if(std::all_of(begin(requirements), end(requirements), fitMix(mix)))
+                        res.push_back({*it1, *it2, *it3, *it4});
+                }
     return res;
 }
 

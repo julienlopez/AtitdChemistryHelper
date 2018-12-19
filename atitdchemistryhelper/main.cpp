@@ -64,12 +64,25 @@ int main(int argc, char* argv[])
         }
         std::cout << std::endl << essences.size() << std::endl;
         LibChemistryHelper::EssenceRecipeFinder finder(essences);
-        const auto recipes = finder.findRecipes(buildRequirements(do_litmus_template_runs));
-        std::cout << recipes.size() << " recipes found:" << std::endl;
-        for(const auto& rec : recipes)
+        if(do_litmus_template_runs)
         {
-            std::cout << "\t " << rec[0].material << " " << rec[1].material << " " << rec[2].material << " "
-                      << rec[3].material << " " << rec[4].material << " " << std::endl;
+            const auto templates = finder.findTemplates(buildRequirements(do_litmus_template_runs));
+            std::cout << templates.size() << " templates found:" << std::endl;
+            for(const auto& templ : templates)
+            {
+                std::cout << "\t " << templ[0].material << " " << templ[1].material << " " << templ[2].material << " "
+                          << templ[3].material << std::endl;
+            }
+        }
+        else
+        {
+            const auto recipes = finder.findRecipes(buildRequirements(do_litmus_template_runs));
+            std::cout << recipes.size() << " recipes found:" << std::endl;
+            for(const auto& rec : recipes)
+            {
+                std::cout << "\t " << rec[0].material << " " << rec[1].material << " " << rec[2].material << " "
+                          << rec[3].material << " " << rec[4].material << " " << std::endl;
+            }
         }
         return EXIT_SUCCESS;
     }
