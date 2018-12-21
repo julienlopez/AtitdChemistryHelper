@@ -1,6 +1,7 @@
 #include "essencetab.hpp"
 
 #include "essencemodel.hpp"
+#include "recipecomposer.hpp"
 
 #include <QTableView>
 #include <QVBoxLayout>
@@ -9,6 +10,9 @@ EssenceTab::EssenceTab(EssenceContainer_t essences_, QWidget* parent)
     : QWidget(parent)
 {
     auto* l = new QVBoxLayout;
+
+    auto* recipe_composer = new RecipeComposer;
+    l->addWidget(recipe_composer);
 
     m_essence_model = new EssenceModel(std::move(essences_), this);
     m_essence_grid = new QTableView;
