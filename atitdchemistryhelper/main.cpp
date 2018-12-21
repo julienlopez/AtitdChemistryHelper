@@ -1,6 +1,5 @@
 #include "libchemistryhelper/essencerecipefinder.hpp"
-
-#include "wikiessencesdatagatherer.hpp"
+#include "libchemistryhelper/wikiessencesdatagatherer.hpp"
 
 #include <iostream>
 
