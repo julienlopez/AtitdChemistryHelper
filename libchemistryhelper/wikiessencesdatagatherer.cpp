@@ -123,7 +123,14 @@ std::vector<std::string> splitHtmlTableLines(std::string html)
     Expects(LibChemistryHelper::Utils::Strings::beginsWith(html, "<tr>"));
     Expects(LibChemistryHelper::Utils::Strings::endsWith(html, "</tr>"));
     html = html.substr(4, html.size() - 4 - 5);
-    return LibChemistryHelper::Utils::Strings::split(html, "</tr><tr>");
+    auto res = LibChemistryHelper::Utils::Strings::split(html, "</tr><tr");
+    for(auto& l : res)
+    {
+        const auto p = l.find("<td");
+        if(p == std::string::npos) continue;
+        l = l.substr(p);
+	}
+	return res;
 }
 
 auto parse(std::string html)
