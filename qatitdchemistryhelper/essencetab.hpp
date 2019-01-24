@@ -21,6 +21,9 @@ public:
 
     EssenceContainer_t essences() const;
 
+signals:
+    void newRecipe(const QString& recipe);
+
 private:
     QTableView* m_essence_grid;
     EssenceModel* m_essence_model;

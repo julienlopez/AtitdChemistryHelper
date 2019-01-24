@@ -19,6 +19,8 @@ EssenceTab::EssenceTab(EssenceContainer_t essences_, QWidget* parent)
     m_essence_grid->setModel(m_essence_model);
     l->addWidget(m_essence_grid);
 
+    connect(recipe_composer, &RecipeComposer::newRecipe, this, &EssenceTab::newRecipe);
+
     setLayout(l);
 }
 
