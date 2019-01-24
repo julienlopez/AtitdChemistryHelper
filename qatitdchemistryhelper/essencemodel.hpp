@@ -15,7 +15,7 @@ public:
 
     virtual ~EssenceModel() = default;
 
-    const EssenceContainer_t& essences() const;
+    EssenceContainer_t essences() const;
 
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
@@ -25,6 +25,13 @@ public:
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+
 private:
     EssenceContainer_t m_essences;
+    std::vector<bool> m_disabled_essences;
+
+    QVariant essenceValue(const QModelIndex& index) const;
 };

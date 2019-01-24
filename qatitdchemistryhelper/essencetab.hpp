@@ -19,7 +19,7 @@ public:
 
     virtual ~EssenceTab() = default;
 
-    const EssenceContainer_t& essences() const;
+    EssenceContainer_t essences() const;
 
 private:
     QTableView* m_essence_grid;

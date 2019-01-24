@@ -9,14 +9,13 @@ RecipeComposer::RecipeComposer(QWidget* parent)
     setFixedHeight(100);
     auto* lay = new QHBoxLayout;
 
-	auto* b = new QPushButton(tr("Clear"));
+    auto* b = new QPushButton(tr("Clear"));
     lay->addWidget(b);
 
+    lay->addStretch();
 
-	lay->addStretch();
-
-	b = new QPushButton(tr("Search"));
+    b = new QPushButton(tr("Search"));
     lay->addWidget(b);
 
-	setLayout(lay);
+    setLayout(lay);
 }

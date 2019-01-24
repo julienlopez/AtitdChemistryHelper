@@ -129,8 +129,8 @@ std::vector<std::string> splitHtmlTableLines(std::string html)
         const auto p = l.find("<td");
         if(p == std::string::npos) continue;
         l = l.substr(p);
-	}
-	return res;
+    }
+    return res;
 }
 
 auto parse(std::string html)

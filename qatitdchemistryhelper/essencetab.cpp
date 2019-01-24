@@ -22,7 +22,7 @@ EssenceTab::EssenceTab(EssenceContainer_t essences_, QWidget* parent)
     setLayout(l);
 }
 
-auto EssenceTab::essences() const -> const EssenceContainer_t&
+auto EssenceTab::essences() const -> EssenceContainer_t
 {
     return m_essence_model->essences();
 }
