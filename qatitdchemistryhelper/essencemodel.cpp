@@ -1,6 +1,8 @@
 #include "essencemodel.hpp"
 
-#include "numeric_range.hpp"
+#include "utils.hpp"
+
+#include <numeric_range.hpp>
 
 #include <array>
 
@@ -58,10 +60,8 @@ QVariant EssenceModel::data(const QModelIndex& index, int role) const
 
 QVariant EssenceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    static const QStringList headers{tr("Material"), tr("disabled"), tr("Temperature"),
-                                     tr("Spirits"),  "Ar",           "As",
-                                     "Bi",           "Sa",           "So",
-                                     "Sp",           "Sw",           "To"};
+    static const QStringList headers = QStringList{tr("Material"), tr("disabled"), tr("Temperature"), tr("Spirits")}
+                                       << Utils::propertyNames();
     if(role != Qt::DisplayRole) return QVariant();
     if(orientation == Qt::Vertical)
         return section;
