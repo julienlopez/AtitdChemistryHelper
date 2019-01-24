@@ -89,8 +89,10 @@ namespace
     };
 }
 
-EssenceRecipeFinder::EssenceRecipeFinder(EssenceContainer_t essences)
+EssenceRecipeFinder::EssenceRecipeFinder(EssenceContainer_t essences,
+                                         boost::optional<OnResultCallback_t> on_result_callback)
     : m_essences(std::move(essences))
+    , m_on_result_callback(on_result_callback)
 {
 }
 
@@ -111,7 +113,11 @@ auto EssenceRecipeFinder::findRecipes(const CompoundRequirementContainer_t& requ
                     {
                         const Mix mix(*it1, *it2, *it3, *it4, *it5);
                         if(std::all_of(begin(requirements), end(requirements), fitMix(mix)))
-                            res.push_back({*it1, *it2, *it3, *it4, *it5});
+                        {
+                            Result_t recipe{*it1, *it2, *it3, *it4, *it5};
+                            if(m_on_result_callback) (*m_on_result_callback)(recipe);
+                            res.push_back(recipe);
+                        }
                     }
     return res;
 }

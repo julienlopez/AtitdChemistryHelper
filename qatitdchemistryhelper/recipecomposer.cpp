@@ -51,7 +51,7 @@ public:
 
     QString toString() const
     {
-        return m_prop_cb->currentText() + " (" + m_value_cb->currentText() + ")";
+        return m_prop_cb->currentText() + "(" + m_value_cb->currentText() + ")";
     }
 
 private:
