@@ -25,4 +25,6 @@ private:
     QFutureWatcher<EssenceContainer_t> m_essence_watcher;
     QTabWidget* m_tab_widget;
     EssenceTab* m_essence_tab;
+
+    void startNewRecipeSearch(const QString new_recipe);
 };
