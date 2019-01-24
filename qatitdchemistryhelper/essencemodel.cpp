@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include <gsl/gsl_util>
+
 EssenceModel::EssenceModel(EssenceContainer_t essences_, QObject* parent)
     : QAbstractTableModel(parent)
     , m_essences(std::move(essences_))
@@ -15,7 +17,7 @@ auto EssenceModel::essences() const -> const EssenceContainer_t&
 
 int EssenceModel::rowCount(const QModelIndex& parent) const
 {
-    return m_essences.size();
+    return gsl::narrow<int>(m_essences.size());
 }
 
 int EssenceModel::columnCount(const QModelIndex& parent) const
