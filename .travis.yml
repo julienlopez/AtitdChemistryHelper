@@ -28,6 +28,8 @@ before_install:
   - sudo unlink /usr/bin/g++
   - sudo ln -s /usr/bin/g++-7 /usr/bin/g++
   - sudo apt search qt5
+  - ls -l /usr/lib/aarch64-linux-gnu/cmake
+  - ls -l /usr/lib/aarch64-linux-gnu/cmake/Qt5LinguistTools
   - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
   - tar xf lcov_1.11.orig.tar.gz
   - sudo make -C lcov-1.11/ install
