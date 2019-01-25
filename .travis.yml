@@ -19,6 +19,7 @@ matrix:
             - g++-7
             - boost1.68
             - qt5-default
+			- qttools5-dev-tools
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && LD=g++-7"
 
