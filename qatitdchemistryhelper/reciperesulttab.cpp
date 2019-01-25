@@ -3,17 +3,19 @@
 #include "reciperesultmodel.hpp"
 #include "reciperesultworker.hpp"
 
+#include <QLabel>
 #include <QTableView>
 #include <QThread>
 #include <QVBoxLayout>
-
-#include <iostream>
 
 RecipeResultTab::RecipeResultTab(QString recipe, LibChemistryHelper::IEssencesDataGatherer::Container_t essences,
                                  QWidget* parent)
     : QWidget(parent)
 {
     auto* l = new QVBoxLayout;
+
+    m_details_label = new QLabel;
+    l->addWidget(m_details_label);
 
     m_recipe_model = new RecipeResultModel(this);
     m_recipe_grid = new QTableView;
@@ -27,20 +29,27 @@ RecipeResultTab::RecipeResultTab(QString recipe, LibChemistryHelper::IEssencesDa
 
 void RecipeResultTab::startSearch(QString recipe, LibChemistryHelper::IEssencesDataGatherer::Container_t essences)
 {
-    QThread* thread = new QThread;
+    m_thread = new QThread;
     auto* worker = new RecipeResultWorker(recipe, std::move(essences));
-    worker->moveToThread(thread);
+    worker->moveToThread(m_thread);
     connect(worker, &RecipeResultWorker::recipeFound, [this](RecipeResultWorker::Recipe_t recipe) {
-        std::cout << recipe[0].material << ", " << recipe[1].material << ", " << recipe[2].material << ", "
-                  << recipe[3].material << ", " << recipe[4].material << std::endl;
         RecipeResultModel::Recipe_t text_recipe;
         std::transform(begin(recipe), end(recipe), begin(text_recipe),
                        [](const LibChemistryHelper::Essence& e) { return QString::fromStdString(e.material); });
         m_recipe_model->addResult(text_recipe);
+        updateDetailsLabel();
     });
-    connect(thread, &QThread::started, worker, &RecipeResultWorker::process);
-    connect(worker, &RecipeResultWorker::finished, thread, &QThread::quit);
+    connect(m_thread, &QThread::started, worker, &RecipeResultWorker::process);
+    connect(worker, &RecipeResultWorker::finished, m_thread, &QThread::quit);
     connect(worker, &RecipeResultWorker::finished, worker, &RecipeResultWorker::deleteLater);
-    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
+    connect(m_thread, &QThread::finished, m_thread, &QThread::deleteLater);
+    connect(m_thread, &QThread::finished, this, &RecipeResultTab::updateDetailsLabel);
+    m_thread->start();
+    updateDetailsLabel();
+}
+
+void RecipeResultTab::updateDetailsLabel()
+{
+    m_details_label->setText(tr("Found: %1\nStatus: ").arg(QString::number(m_recipe_model->rowCount()))
+                             + (m_thread->isRunning() ? tr("Running") : tr("Done")));
 }

@@ -6,6 +6,7 @@
 
 class RecipeResultModel;
 
+class QLabel;
 class QTableView;
 
 class RecipeResultTab : public QWidget
@@ -21,6 +22,10 @@ public:
 private:
     QTableView* m_recipe_grid;
     RecipeResultModel* m_recipe_model;
+    QLabel* m_details_label;
+    QThread* m_thread;
 
     void startSearch(QString recipe, LibChemistryHelper::IEssencesDataGatherer::Container_t essences);
+
+    void updateDetailsLabel();
 };
