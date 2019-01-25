@@ -4,7 +4,7 @@
 
 #include <QWidget>
 
-class RecipeModel;
+class RecipeResultModel;
 
 class QTableView;
 
@@ -20,7 +20,7 @@ public:
 
 private:
     QTableView* m_recipe_grid;
-    RecipeModel* m_recipe_model;
+    RecipeResultModel* m_recipe_model;
 
     void startSearch(QString recipe, LibChemistryHelper::IEssencesDataGatherer::Container_t essences);
 };

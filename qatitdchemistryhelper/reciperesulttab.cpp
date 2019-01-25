@@ -1,5 +1,6 @@
 #include "reciperesulttab.hpp"
 
+#include "reciperesultmodel.hpp"
 #include "reciperesultworker.hpp"
 
 #include <QTableView>
@@ -14,9 +15,9 @@ RecipeResultTab::RecipeResultTab(QString recipe, LibChemistryHelper::IEssencesDa
 {
     auto* l = new QVBoxLayout;
 
-    // m_essence_model = new EssenceModel(std::move(essences_), this);
+    m_recipe_model = new RecipeResultModel(this);
     m_recipe_grid = new QTableView;
-    // m_essence_grid->setModel(m_essence_model);
+    m_recipe_grid->setModel(m_recipe_model);
     l->addWidget(m_recipe_grid);
 
     startSearch(recipe, std::move(essences));
@@ -32,6 +33,10 @@ void RecipeResultTab::startSearch(QString recipe, LibChemistryHelper::IEssencesD
     connect(worker, &RecipeResultWorker::recipeFound, [this](RecipeResultWorker::Recipe_t recipe) {
         std::cout << recipe[0].material << ", " << recipe[1].material << ", " << recipe[2].material << ", "
                   << recipe[3].material << ", " << recipe[4].material << std::endl;
+        RecipeResultModel::Recipe_t text_recipe;
+        std::transform(begin(recipe), end(recipe), begin(text_recipe),
+                       [](const LibChemistryHelper::Essence& e) { return QString::fromStdString(e.material); });
+        m_recipe_model->addResult(text_recipe);
     });
     connect(thread, &QThread::started, worker, &RecipeResultWorker::process);
     connect(worker, &RecipeResultWorker::finished, thread, &QThread::quit);

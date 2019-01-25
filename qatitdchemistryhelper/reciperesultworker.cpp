@@ -19,9 +19,9 @@ void RecipeResultWorker::process()
     std::vector<LibChemistryHelper::CompoundRequirement> requirements;
     std::transform(begin(reqs), end(reqs), std::back_inserter(requirements),
                    &LibChemistryHelper::CompoundRequirement::fromString);
-    auto lbd = [this](Recipe_t recipe) {};
+    auto lbd = [this](Recipe_t recipe) { emit recipeFound(recipe); };
     EssenceRecipeFinder finder(m_essences, boost::optional<EssenceRecipeFinder::OnResultCallback_t>(lbd));
     const auto recipes = finder.findRecipes(requirements);
-    std::cout << "done!" << std::endl;
+    std::cout << "done!" << std::endl; // TODO remove
     emit finished();
 }
