@@ -35,5 +35,6 @@ void MainWindow::loadEssences()
 void MainWindow::startNewRecipeSearch(const QString new_recipe)
 {
     auto* tab = new RecipeResultTab(new_recipe, m_essence_tab->essences());
-    m_tab_widget->addTab(tab, new_recipe);
+    const auto pos = m_tab_widget->addTab(tab, new_recipe);
+    m_tab_widget->setCurrentIndex(pos);
 }
